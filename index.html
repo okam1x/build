@@ -4,6 +4,11 @@
   <meta charset="UTF-8" />
   <title>Lift Log – Ved</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#020617" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icon-192.png" />
   <style>
     :root {
       --bg: #02030a;
@@ -1111,6 +1116,15 @@
 
     // initial
     render();
+       
+    // Register service worker for PWA
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker
+          .register("./sw.js")
+          .catch((err) => console.log("SW registration failed", err));
+      });
+    }
   </script>
 </body>
 </html>
