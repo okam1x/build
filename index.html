@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Lift Log – Ved</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      --bg: #02030a;
+      --card: #050b19;
+      --card-alt: #070f20;
+      --accent: #4ade80;
+      --accent-soft: rgba(74, 222, 128, 0.12);
+      --text-main: #f9fafb;
+      --text-soft: #9ca3af;
+      --border-subtle: #111827;
+      --danger: #f97373;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --radius-sm: 999px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        sans-serif;
+      background: radial-gradient(circle at top, #020617, #020308 50%, #000);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 24px 12px;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 430px;
+      margin: 0 auto;
+    }
+
+    .main-card {
+      background: linear-gradient(135deg, #020617, #020617 35%, #050b19 100%);
+      border-radius: 28px;
+      padding: 16px 16px 18px;
+      box-shadow:
+        0 28px 60px rgba(15, 23, 42, 0.85),
+        0 0 0 1px rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.15);
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .today-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .today-label {
+      font-size: 0.85rem;
+      color: var(--text-soft);
+    }
+
+    .today-date {
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+
+    .streak-pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(55, 65, 81, 0.6);
+      font-size: 0.72rem;
+      color: #e5e7eb;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      backdrop-filter: blur(8px);
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    .block {
+      background: var(--card-alt);
+      border-radius: var(--radius-lg);
+      padding: 10px 10px 12px;
+      border: 1px solid rgba(30, 64, 175, 0.3);
+      box-shadow: 0 16px 30px rgba(15, 23, 42, 0.75);
+      margin-bottom: 10px;
+    }
+
+    .block-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .block-title {
+      font-size: 0.86rem;
+      font-weight: 500;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+    }
+
+    .pill-ontrack {
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: #bbf7d0;
+      font-size: 0.7rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .pill-ontrack span.dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 999px;
+      background: var(--accent);
+    }
+
+    label {
+      font-size: 0.78rem;
+      color: var(--text-soft);
+      margin-bottom: 4px;
+      display: block;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      width: 100%;
+      border-radius: 11px;
+      border: 1px solid rgba(30, 64, 175, 0.7);
+      background: radial-gradient(circle at top, #020617, #020617 55%, #020814);
+      color: var(--text-main);
+      padding: 7px 10px;
+      font-size: 0.85rem;
+      outline: none;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease;
+      min-width: 0;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: #6b7280;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: #60a5fa;
+      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.7);
+    }
+
+    textarea {
+      resize: none;
+      min-height: 46px;
+    }
+
+    .workout-layout {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .note-row {
+      margin-top: 4px;
+    }
+
+    .block-title-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .counter-pill {
+      font-size: 0.7rem;
+      padding: 3px 7px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--text-soft);
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .counter-pill span {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+
+    .exercise-header {
+      display: grid;
+      grid-template-columns: 1.6fr 0.8fr 0.8fr 0.9fr 1fr;
+      gap: 6px;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #6b7280;
+      margin-bottom: 4px;
+      padding-inline: 2px;
+    }
+
+    .exercise-row {
+      display: grid;
+      grid-template-columns: 1.6fr 0.8fr 0.8fr 0.9fr 1fr auto;
+      gap: 6px;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .exercise-row input[type="number"] {
+      text-align: center;
+    }
+
+    .rpe-badge {
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      padding: 5px 7px;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 6px;
+      color: #e5e7eb;
+    }
+
+    .rpe-badge input[type="range"] {
+      flex: 1;
+      appearance: none;
+      height: 3px;
+      background: #1f2937;
+      border-radius: 999px;
+      outline: none;
+    }
+
+    .rpe-badge input[type="range"]::-webkit-slider-thumb {
+      appearance: none;
+      width: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: var(--accent);
+      border: 1px solid #22c55e;
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.25);
+    }
+
+    .rpe-badge span {
+      min-width: 1.2rem;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      color: #a5b4fc;
+    }
+
+    .btn {
+      border: none;
+      border-radius: var(--radius-sm);
+      padding: 6px 10px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      transition: background 0.15s ease, transform 0.08s ease,
+        box-shadow 0.12s ease;
+      white-space: nowrap;
+    }
+
+    .btn-ghost {
+      background: rgba(15, 23, 42, 0.9);
+      color: #e5e7eb;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+    }
+
+    .btn-ghost:hover {
+      background: rgba(31, 41, 55, 0.95);
+    }
+
+    .btn-ghost-danger {
+      border-color: rgba(248, 113, 113, 0.6);
+      color: #fecaca;
+    }
+
+    .btn-ghost-danger:hover {
+      background: rgba(127, 29, 29, 0.75);
+    }
+
+    .btn-accent {
+      background: linear-gradient(135deg, #4ade80, #22c55e);
+      color: #052e16;
+      box-shadow: 0 0 25px rgba(34, 197, 94, 0.35);
+    }
+
+    .btn-accent:hover {
+      filter: brightness(1.05);
+      transform: translateY(-0.5px);
+    }
+
+    .btn-accent:active {
+      transform: translateY(0.5px);
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.35);
+    }
+
+    .add-btn-row {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 2px;
+    }
+
+    .history-block {
+      margin-top: 8px;
+      background: rgba(15, 23, 42, 0.9);
+      border-radius: 16px;
+      padding: 8px 10px 10px;
+      border: 1px dashed rgba(75, 85, 99, 0.6);
+    }
+
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 4px;
+    }
+
+    .history-title {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #6b7280;
+    }
+
+    .history-entries {
+      max-height: 130px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .history-item {
+      padding: 4px 0;
+      border-bottom: 1px solid rgba(31, 41, 55, 0.8);
+      font-size: 0.8rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 6px;
+      color: #9ca3af;
+    }
+
+    .history-item:last-child {
+      border-bottom: none;
+    }
+
+    .history-item span.label {
+      color: #e5e7eb;
+    }
+
+    .complete-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 6px;
+      margin-top: 6px;
+      border-top: 1px solid rgba(30, 64, 175, 0.5);
+      font-size: 0.8rem;
+      color: var(--text-soft);
+    }
+
+    .complete-row span.emoji {
+      margin-right: 4px;
+    }
+
+    .complete-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      cursor: pointer;
+      font-size: 0.78rem;
+    }
+
+    .complete-toggle input {
+      accent-color: var(--accent);
+    }
+
+    .small-kpi {
+      font-size: 0.76rem;
+      color: #9ca3af;
+    }
+
+    .small-kpi strong {
+      color: #e5e7eb;
+    }
+
+    /* WEIGHT BLOCK */
+
+    .weight-layout {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .weight-layout-main {
+      flex: 1;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .weight-layout-main input[type="number"] {
+      max-width: 90px;
+      text-align: center;
+    }
+
+    .weight-unit {
+      font-size: 0.8rem;
+      color: var(--text-soft);
+    }
+
+    .weight-summary {
+      font-size: 0.78rem;
+      color: var(--text-soft);
+      margin-bottom: 6px;
+    }
+
+    .weight-summary span.value {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+
+    .weight-summary span.up {
+      color: #fca5a5;
+    }
+
+    .weight-summary span.down {
+      color: #6ee7b7;
+    }
+
+    .weight-chart-wrapper {
+      border-radius: 12px;
+      background: radial-gradient(circle at top, #020617, #020617 60%, #020814);
+      border: 1px solid rgba(30, 64, 175, 0.6);
+      padding: 6px 8px 8px;
+    }
+
+    .weight-chart-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 4px;
+      font-size: 0.7rem;
+      color: #6b7280;
+    }
+
+    .weight-chart-label-row span.highlight {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+
+    canvas#weight-chart {
+      width: 100%;
+      height: 90px;
+      display: block;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        padding-inline: 10px;
+      }
+
+      .main-card {
+        border-radius: 22px;
+      }
+
+      .workout-layout {
+        grid-template-columns: 1fr;
+      }
+
+      .exercise-header {
+        grid-template-columns: 1.5fr 1fr 1fr;
+        grid-template-areas: "name sets reps";
+      }
+
+      .exercise-header div:nth-child(1) { grid-area: name; }
+      .exercise-header div:nth-child(2) { grid-area: sets; }
+      .exercise-header div:nth-child(3) { grid-area: reps; }
+      .exercise-header div:nth-child(4),
+      .exercise-header div:nth-child(5) { display: none; }
+
+      .exercise-row {
+        grid-template-columns: 1.5fr 0.9fr 0.9fr;
+        grid-template-rows: auto auto;
+        grid-template-areas:
+          "name sets reps"
+          "rpe weight actions";
+      }
+
+      .exercise-row input[name="exercise-name"] { grid-area: name; }
+      .exercise-row input[name="sets"] { grid-area: sets; }
+      .exercise-row input[name="reps"] { grid-area: reps; }
+      .exercise-row .rpe-badge { grid-area: rpe; }
+      .exercise-row input[name="weight"] { grid-area: weight; }
+      .exercise-row .btn-ghost-danger {
+        grid-area: actions;
+        justify-self: flex-end;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <div class="main-card">
+      <header>
+        <div class="today-info">
+          <div class="today-label">Today</div>
+          <div class="today-date" id="today-date"></div>
+        </div>
+        <div class="streak-pill">
+          <span class="badge-dot"></span>
+          <span id="streak-text">0-day streak</span>
+        </div>
+      </header>
+
+      <!-- WORKOUT INFO -->
+      <section class="block">
+        <div class="block-header-row">
+          <div class="block-title">Workout</div>
+          <div class="pill-ontrack">
+            <span class="dot"></span>
+            On track
+          </div>
+        </div>
+
+        <div class="workout-layout">
+          <div>
+            <label for="workout-name">Name today’s session</label>
+            <input
+              id="workout-name"
+              type="text"
+              placeholder="Push, pull, legs, arms, etc."
+            />
+          </div>
+          <div>
+            <label for="workout-focus">Focus</label>
+            <input
+              id="workout-focus"
+              type="text"
+              placeholder="Chest + tris, back, cardio..."
+            />
+          </div>
+        </div>
+
+        <div class="note-row">
+          <label for="workout-notes">Notes</label>
+          <textarea
+            id="workout-notes"
+            placeholder="Energy, sleep, goals, how you feel…"
+          ></textarea>
+        </div>
+      </section>
+
+      <!-- BODYWEIGHT -->
+      <section class="block">
+        <div class="block-header-row">
+          <div class="block-title">Bodyweight</div>
+          <div class="counter-pill">
+            Trend: <span id="weight-trend-label">—</span>
+          </div>
+        </div>
+
+        <div class="weight-layout">
+          <div class="weight-layout-main">
+            <input
+              id="weight-input"
+              type="number"
+              step="0.1"
+              min="0"
+              placeholder="165.0"
+            />
+            <span class="weight-unit">lb</span>
+          </div>
+          <button class="btn btn-accent" id="save-weight-btn">
+            Save
+          </button>
+        </div>
+
+        <div class="weight-summary" id="weight-summary">
+          No weight logged yet for today.
+        </div>
+
+        <div class="weight-chart-wrapper">
+          <div class="weight-chart-label-row">
+            <span>Last <span class="highlight">14</span> entries</span>
+            <span id="weight-range-label">—</span>
+          </div>
+          <canvas id="weight-chart"></canvas>
+        </div>
+      </section>
+
+      <!-- EXERCISES -->
+      <section class="block">
+        <div class="block-title-row">
+          <div class="block-title">Session</div>
+          <div class="counter-pill">
+            Sets logged: <span id="set-count">0</span>
+          </div>
+        </div>
+
+        <div class="exercise-header">
+          <div>Exercise</div>
+          <div>Sets</div>
+          <div>Reps</div>
+          <div>Weight</div>
+          <div>RPE</div>
+        </div>
+
+        <div id="exercise-container"></div>
+
+        <div class="add-btn-row">
+          <button class="btn btn-ghost" id="add-exercise-btn">
+            + Add exercise
+          </button>
+        </div>
+      </section>
+
+      <!-- HISTORY + COMPLETE -->
+      <section class="history-block">
+        <div class="history-header">
+          <div class="history-title">Recent sessions</div>
+        </div>
+        <div class="history-entries" id="history-list"></div>
+
+        <div class="complete-row">
+          <div>
+            <span class="emoji">🏁</span>
+            <label class="complete-toggle">
+              <input type="checkbox" id="complete-toggle" />
+              Mark today complete
+            </label>
+          </div>
+          <div class="small-kpi">
+            Total sets today: <strong id="total-sets-footer">0</strong>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    const todayDateEl = document.getElementById("today-date");
+    const streakTextEl = document.getElementById("streak-text");
+    const setCountEl = document.getElementById("set-count");
+    const totalSetsFooterEl = document.getElementById("total-sets-footer");
+    const historyListEl = document.getElementById("history-list");
+    const completeToggleEl = document.getElementById("complete-toggle");
+
+    const workoutNameEl = document.getElementById("workout-name");
+    const workoutFocusEl = document.getElementById("workout-focus");
+    const workoutNotesEl = document.getElementById("workout-notes");
+    const exerciseContainer = document.getElementById("exercise-container");
+    const addExerciseBtn = document.getElementById("add-exercise-btn");
+
+    // weight elements
+    const weightInputEl = document.getElementById("weight-input");
+    const saveWeightBtn = document.getElementById("save-weight-btn");
+    const weightSummaryEl = document.getElementById("weight-summary");
+    const weightTrendLabelEl = document.getElementById("weight-trend-label");
+    const weightRangeLabelEl = document.getElementById("weight-range-label");
+    const weightChartCanvas = document.getElementById("weight-chart");
+
+    const STORAGE_KEY = "ved_lift_log_v1";
+
+    function formatDate(date) {
+      return date.toLocaleDateString(undefined, {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+      });
+    }
+
+    function todayKey() {
+      const d = new Date();
+      return d.toISOString().slice(0, 10);
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return { days: {}, weightLog: [] };
+        const parsed = JSON.parse(raw);
+        if (!parsed.days) parsed.days = {};
+        if (!parsed.weightLog) parsed.weightLog = [];
+        return parsed;
+      } catch {
+        return { days: {}, weightLog: [] };
+      }
+    }
+
+    function saveState(state) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function getTodayState() {
+      const state = loadState();
+      const key = todayKey();
+      if (!state.days[key]) {
+        state.days[key] = {
+          date: key,
+          workoutName: "",
+          focus: "",
+          notes: "",
+          complete: false,
+          exercises: [],
+        };
+      }
+      return { state, day: state.days[key], key };
+    }
+
+    function calculateStreak(state) {
+      const dates = Object.keys(state.days).sort().reverse();
+      if (!dates.length) return 0;
+      let streak = 0;
+      const today = todayKey();
+      let expected = today;
+      for (const d of dates) {
+        const day = state.days[d];
+        if (!day.complete) continue;
+        if (d === expected) {
+          streak++;
+          const dt = new Date(expected);
+          dt.setDate(dt.getDate() - 1);
+          expected = dt.toISOString().slice(0, 10);
+        }
+      }
+      return streak;
+    }
+
+    function renderHistory(state) {
+      const dates = Object.keys(state.days).sort().reverse().slice(0, 7);
+      historyListEl.innerHTML = "";
+      if (!dates.length) {
+        historyListEl.innerHTML =
+          '<div class="history-item"><span>No history yet.</span></div>';
+        return;
+      }
+      dates.forEach((key) => {
+        const d = state.days[key];
+        const dateLabel = formatDate(new Date(key));
+        const sets = d.exercises.reduce(
+          (sum, ex) => sum + (Number(ex.sets) || 0),
+          0
+        );
+        const item = document.createElement("div");
+        item.className = "history-item";
+        item.innerHTML = `
+          <span><span class="label">${dateLabel}</span> – ${
+          d.workoutName || "Untitled"
+        }</span>
+          <span>${sets} sets</span>
+        `;
+        historyListEl.appendChild(item);
+      });
+    }
+
+    function updateSetCounts(day) {
+      const totalSets = day.exercises.reduce(
+        (sum, ex) => sum + (Number(ex.sets) || 0),
+        0
+      );
+      setCountEl.textContent = totalSets;
+      totalSetsFooterEl.textContent = totalSets;
+    }
+
+    function makeExerciseRow(exercise, index, onChange, onDelete) {
+      const row = document.createElement("div");
+      row.className = "exercise-row";
+
+      row.innerHTML = `
+        <input name="exercise-name" type="text" placeholder="Bicep curls" value="${
+          exercise.name || ""
+        }" />
+        <input name="sets" type="number" min="0" placeholder="3" value="${
+          exercise.sets ?? ""
+        }" />
+        <input name="reps" type="number" min="0" placeholder="10" value="${
+          exercise.reps ?? ""
+        }" />
+        <input name="weight" type="number" min="0" step="0.5" placeholder="lb" value="${
+          exercise.weight ?? ""
+        }" />
+        <div class="rpe-badge">
+          <span>RPE</span>
+          <input name="rpe" type="range" min="5" max="10" step="0.5" value="${
+            exercise.rpe ?? 7
+          }" />
+          <span class="rpe-val">${exercise.rpe ?? 7}</span>
+        </div>
+        <button class="btn btn-ghost btn-ghost-danger">✕</button>
+      `;
+
+      const nameInput = row.querySelector('input[name="exercise-name"]');
+      const setsInput = row.querySelector('input[name="sets"]');
+      const repsInput = row.querySelector('input[name="reps"]');
+      const weightInput = row.querySelector('input[name="weight"]');
+      const rpeInput = row.querySelector('input[name="rpe"]');
+      const rpeVal = row.querySelector(".rpe-val");
+      const deleteBtn = row.querySelector("button");
+
+      function handleChange() {
+        onChange(index, {
+          name: nameInput.value.trim(),
+          sets: setsInput.value,
+          reps: repsInput.value,
+          weight: weightInput.value,
+          rpe: rpeInput.value,
+        });
+      }
+
+      [nameInput, setsInput, repsInput, weightInput].forEach((el) =>
+        el.addEventListener("input", handleChange)
+      );
+
+      rpeInput.addEventListener("input", () => {
+        rpeVal.textContent = rpeInput.value;
+        handleChange();
+      });
+
+      deleteBtn.addEventListener("click", () => onDelete(index));
+
+      return row;
+    }
+
+    // WEIGHT LOGIC
+
+    function saveTodayWeight() {
+      const raw = weightInputEl.value;
+      const val = Number(raw);
+      if (!raw || Number.isNaN(val) || val <= 0) return;
+
+      const state = loadState();
+      const key = todayKey();
+
+      if (!state.weightLog) state.weightLog = [];
+
+      const existingIdx = state.weightLog.findIndex((e) => e.date === key);
+      if (existingIdx >= 0) {
+        state.weightLog[existingIdx].weight = val;
+      } else {
+        state.weightLog.push({ date: key, weight: val });
+      }
+      state.weightLog.sort((a, b) => (a.date < b.date ? -1 : 1));
+      saveState(state);
+      renderWeight(state);
+    }
+
+    function renderWeight(state) {
+      if (!state.weightLog) state.weightLog = [];
+      const log = [...state.weightLog].sort((a, b) =>
+        a.date < b.date ? -1 : 1
+      );
+      const key = todayKey();
+      const todayEntry = log.find((e) => e.date === key);
+
+      if (todayEntry) {
+        weightInputEl.value = todayEntry.weight.toFixed(1);
+      } else {
+        weightInputEl.value = "";
+      }
+
+      if (!log.length) {
+        weightSummaryEl.textContent = "No weight logged yet for today.";
+        weightTrendLabelEl.textContent = "—";
+        weightRangeLabelEl.textContent = "—";
+        drawWeightChart([]);
+        return;
+      }
+
+      // last and previous
+      const last = log[log.length - 1];
+      const prev = log.length > 1 ? log[log.length - 2] : null;
+
+      let summaryText = `Last: `;
+      summaryText += `<span class="value">${last.weight.toFixed(1)} lb</span>`;
+      if (prev) {
+        const diff = last.weight - prev.weight;
+        if (Math.abs(diff) >= 0.05) {
+          const cls = diff > 0 ? "up" : "down";
+          const arrow = diff > 0 ? "↑" : "↓";
+          summaryText += ` • <span class="${cls}">${arrow} ${Math.abs(
+            diff
+          ).toFixed(1)} lb vs prev</span>`;
+        }
+      }
+      weightSummaryEl.innerHTML = summaryText;
+
+      // trend label (7-day-ish)
+      if (log.length > 1) {
+        const first = log[0];
+        const totalDiff = last.weight - first.weight;
+        if (Math.abs(totalDiff) < 0.05) {
+          weightTrendLabelEl.textContent = "stable";
+        } else if (totalDiff < 0) {
+          weightTrendLabelEl.textContent = "down";
+        } else {
+          weightTrendLabelEl.textContent = "up";
+        }
+      } else {
+        weightTrendLabelEl.textContent = "—";
+      }
+
+      // range label
+      const weights = log.map((e) => e.weight);
+      const minW = Math.min(...weights);
+      const maxW = Math.max(...weights);
+      weightRangeLabelEl.textContent =
+        log.length > 1
+          ? `${minW.toFixed(1)} – ${maxW.toFixed(1)} lb`
+          : `${last.weight.toFixed(1)} lb`;
+
+      // chart: last 14 entries
+      const last14 = log.slice(-14);
+      drawWeightChart(last14);
+    }
+
+    function drawWeightChart(points) {
+      if (!weightChartCanvas) return;
+      const ctx = weightChartCanvas.getContext("2d");
+      const dpr = window.devicePixelRatio || 1;
+      const rect = weightChartCanvas.getBoundingClientRect();
+      weightChartCanvas.width = rect.width * dpr;
+      weightChartCanvas.height = rect.height * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      ctx.clearRect(0, 0, rect.width, rect.height);
+
+      // background grid-ish
+      ctx.fillStyle = "#020617";
+      ctx.fillRect(0, 0, rect.width, rect.height);
+
+      if (!points || points.length === 0) {
+        ctx.fillStyle = "#6b7280";
+        ctx.font = "11px system-ui";
+        ctx.fillText("Log a few days to see your trend.", 10, rect.height / 2);
+        return;
+      }
+
+      const weights = points.map((p) => p.weight);
+      let minW = Math.min(...weights);
+      let maxW = Math.max(...weights);
+      if (minW === maxW) {
+        minW -= 0.5;
+        maxW += 0.5;
+      }
+
+      const paddingX = 10;
+      const paddingTop = 8;
+      const paddingBottom = 14;
+      const width = rect.width - paddingX * 2;
+      const height = rect.height - paddingTop - paddingBottom;
+
+      ctx.strokeStyle = "rgba(55,65,81,0.8)";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(paddingX, rect.height - paddingBottom);
+      ctx.lineTo(rect.width - paddingX, rect.height - paddingBottom);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.moveTo(paddingX, paddingTop);
+      ctx.lineTo(paddingX, rect.height - paddingBottom);
+      ctx.stroke();
+
+      const n = points.length;
+      const stepX = n > 1 ? width / (n - 1) : 0;
+
+      ctx.beginPath();
+      points.forEach((p, idx) => {
+        const x = paddingX + stepX * idx;
+        const norm =
+          (p.weight - minW) / (maxW - minW || 1); // 0–1
+        const y = paddingTop + (1 - norm) * height;
+
+        if (idx === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.strokeStyle = "#4ade80";
+      ctx.lineWidth = 1.7;
+      ctx.stroke();
+
+      // points
+      points.forEach((p, idx) => {
+        const x = paddingX + stepX * idx;
+        const norm =
+          (p.weight - minW) / (maxW - minW || 1);
+        const y = paddingTop + (1 - norm) * height;
+
+        ctx.beginPath();
+        ctx.arc(x, y, 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = "#bbf7d0";
+        ctx.fill();
+      });
+    }
+
+    function render() {
+      const { state, day } = getTodayState();
+
+      todayDateEl.textContent = formatDate(new Date());
+      const streak = calculateStreak(state);
+      streakTextEl.textContent =
+        streak > 0 ? `${streak}-day streak` : "Fresh start";
+
+      workoutNameEl.value = day.workoutName || "";
+      workoutFocusEl.value = day.focus || "";
+      workoutNotesEl.value = day.notes || "";
+      completeToggleEl.checked = !!day.complete;
+
+      exerciseContainer.innerHTML = "";
+      day.exercises.forEach((ex, i) => {
+        const row = makeExerciseRow(
+          ex,
+          i,
+          (index, updated) => {
+            const { state, day } = getTodayState();
+            day.exercises[index] = { ...day.exercises[index], ...updated };
+            updateSetCounts(day);
+            saveState(state);
+          },
+          (index) => {
+            const { state, day } = getTodayState();
+            day.exercises.splice(index, 1);
+            saveState(state);
+            render();
+          }
+        );
+        exerciseContainer.appendChild(row);
+      });
+
+      updateSetCounts(day);
+      renderHistory(state);
+      renderWeight(state);
+    }
+
+    // events
+    workoutNameEl.addEventListener("input", () => {
+      const { state, day } = getTodayState();
+      day.workoutName = workoutNameEl.value.trim();
+      saveState(state);
+    });
+
+    workoutFocusEl.addEventListener("input", () => {
+      const { state, day } = getTodayState();
+      day.focus = workoutFocusEl.value.trim();
+      saveState(state);
+    });
+
+    workoutNotesEl.addEventListener("input", () => {
+      const { state, day } = getTodayState();
+      day.notes = workoutNotesEl.value;
+      saveState(state);
+    });
+
+    addExerciseBtn.addEventListener("click", () => {
+      const { state, day } = getTodayState();
+      day.exercises.push({
+        name: "",
+        sets: "",
+        reps: "",
+        weight: "",
+        rpe: 7,
+      });
+      saveState(state);
+      render();
+    });
+
+    completeToggleEl.addEventListener("change", () => {
+      const { state, day } = getTodayState();
+      day.complete = completeToggleEl.checked;
+      saveState(state);
+      render();
+    });
+
+    saveWeightBtn.addEventListener("click", () => {
+      saveTodayWeight();
+    });
+
+    window.addEventListener("resize", () => {
+      const state = loadState();
+      renderWeight(state);
+    });
+
+    // initial
+    render();
+  </script>
+</body>
+</html>
