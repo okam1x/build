@@ -8,9 +8,9 @@ No accounts. No paywalls. Just log and lift.
 - **Bodyweight tracker** with a clean **14-entry trend chart**
 - **Streak system** (based on “Mark today complete”)
 - **Recent sessions** history (last 7 days)
-- **Videos tab** with your favorite **TikTok workout clips**:
-  - Shoulders / Back / Arms / Abs / Legs  
-  - Includes **“Open in TikTok”** fallback button (works even if embed fails)
+- **Videos tab** with your favorite **TikTok workout clips**
+  - Shoulders / Back / Arms / Abs / Legs
+  - Includes **Open in TikTok** fallback button (works even if embed fails)
 - **Offline support** (PWA + service worker cache)
 
 ## 🎨 Theme
@@ -19,25 +19,30 @@ Hot pink + black/grey UI (custom CSS variables) for a clean “night mode gym ap
 ## 🚀 Live Demo / Install
 If this is hosted on GitHub Pages, you can install it like an app:
 - **iOS (Safari):** Share → **Add to Home Screen**
-- **Android (Chrome):** “Install app” prompt or menu → **Install**
+- **Android (Chrome):** Menu → **Install app**
 
 ## 🧱 Project Structure
-─ index.html
+```txt
+/
+├─ index.html
 ├─ manifest.json
 ├─ sw.js
 ├─ icon-192.png
 └─ icon-512.png
+```
 
-## 🛠️ Local Development
-Because service workers require a proper origin, run a local server (not `file://`).
+🛠️ Local Development
 
-### Option A: Python
-```bash
+Because service workers require a proper origin, run a local server (not file://).
+
+Option A: Python
+```txt
 python3 -m http.server 5173
-
+```
 Option B: Node
+```txt
 npx serve .
-
+```
 Then open:
 	•	http://localhost:5173
 
@@ -50,20 +55,24 @@ Then open:
 🔄 Updating the App (Important)
 
 This project uses a cache-first service worker.
-When you change index.html, you should bump the cache name in sw.js so the update shows up:
+When you change index.html, bump the cache name in sw.js so the update shows up:
+```txt
 // sw.js
 const CACHE_NAME = "ved-lift-cache-v2";
+```
 If you don’t bump it, your phone may keep showing the old UI.
 
 📼 Editing the Videos Tab
 
 Videos are stored in VIDEO_LIBRARY inside index.html.
+
 Example:
+```txt
 const VIDEO_LIBRARY = {
   shoulders: [{ title: "Shoulders 1", url: "https://www.tiktok.com/t/..." }],
   back: [{ title: "Back", url: "https://www.tiktok.com/t/..." }],
 };
-
+```
 TikTok Embed Notes
 	•	TikTok embeds require internet (they load TikTok’s embed script)
 	•	The app always shows Open in TikTok so the link works no matter what
@@ -84,4 +93,5 @@ No cloud, no account, no tracking.
 	•	Set-by-set logging
 
 License
-If you want, tell me your **GitHub Pages link** (or repo name) and I’ll tailor the README with the exact install URL + correct Pages steps for your repo.
+MIT 
+After you paste this, click **Preview** — it should render normally (no giant gray block).
