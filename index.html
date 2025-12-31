@@ -4,37 +4,39 @@
   <meta charset="UTF-8" />
   <title>Lift Log – Ved</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#020617" />
+  <meta name="theme-color" content="#0b0b12" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <link rel="manifest" href="manifest.json" />
   <link rel="apple-touch-icon" href="icon-192.png" />
+
   <style>
     :root {
-      --bg: #02030a;
-      --card: #050b19;
-      --card-alt: #070f20;
-      --accent: #4ade80;
-      --accent-soft: rgba(74, 222, 128, 0.12);
+      --bg: #05060a;
+      --card: #0a0b10;
+      --card-alt: #0e1018;
+
+      /* HOT PINK ACCENT */
+      --accent: #ff3ea5;
+      --accent-2: #ff66c4;
+      --accent-soft: rgba(255, 62, 165, 0.14);
+
       --text-main: #f9fafb;
-      --text-soft: #9ca3af;
-      --border-subtle: #111827;
-      --danger: #f97373;
+      --text-soft: #a1a1aa;
+      --border-subtle: rgba(255,255,255,0.08);
+
+      --danger: #fb7185;
+
       --radius-lg: 18px;
       --radius-md: 12px;
       --radius-sm: 999px;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-        sans-serif;
-      background: radial-gradient(circle at top, #020617, #020308 50%, #000);
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif;
+      background: radial-gradient(circle at top, #0b0b12, #05060a 55%, #000);
       color: var(--text-main);
       min-height: 100vh;
       display: flex;
@@ -43,20 +45,16 @@
       padding: 24px 12px;
     }
 
-    .app-shell {
-      width: 100%;
-      max-width: 430px;
-      margin: 0 auto;
-    }
+    .app-shell { width: 100%; max-width: 430px; margin: 0 auto; }
 
     .main-card {
-      background: linear-gradient(135deg, #020617, #020617 35%, #050b19 100%);
+      background: linear-gradient(135deg, #070812, #0b0b12 35%, #0e1018 100%);
       border-radius: 28px;
       padding: 16px 16px 18px;
       box-shadow:
-        0 28px 60px rgba(15, 23, 42, 0.85),
-        0 0 0 1px rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(148, 163, 184, 0.15);
+        0 28px 60px rgba(0, 0, 0, 0.65),
+        0 0 0 1px rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
 
     header {
@@ -66,47 +64,60 @@
       margin-bottom: 12px;
     }
 
-    .today-info {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .today-label {
-      font-size: 0.85rem;
-      color: var(--text-soft);
-    }
-
-    .today-date {
-      font-size: 1.05rem;
-      font-weight: 600;
-    }
+    .today-info { display: flex; flex-direction: column; gap: 2px; }
+    .today-label { font-size: 0.85rem; color: var(--text-soft); }
+    .today-date { font-size: 1.05rem; font-weight: 600; }
 
     .streak-pill {
       padding: 4px 10px;
       border-radius: 999px;
-      background: rgba(55, 65, 81, 0.6);
+      background: rgba(255,255,255,0.06);
       font-size: 0.72rem;
       color: #e5e7eb;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
       backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.08);
     }
 
-    .badge-dot {
-      width: 6px;
-      height: 6px;
+    .badge-dot { width: 6px; height: 6px; border-radius: 999px; background: var(--accent); }
+
+    /* Tabs */
+    .tabbar{
+      display:flex;
+      gap:8px;
+      margin: 10px 0 12px;
+      padding: 6px;
       border-radius: 999px;
-      background: var(--accent);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
     }
+    .tab{
+      flex:1;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 0;
+      cursor: pointer;
+      background: transparent;
+      color: var(--text-soft);
+      font-weight: 650;
+      font-size: 0.85rem;
+    }
+    .tab.active{
+      background: rgba(255, 62, 165, 0.16);
+      color: #ffe4f3;
+      box-shadow: 0 0 0 1px rgba(255, 62, 165, 0.25);
+    }
+    .tabpage{ display:none; }
+    .tabpage.active{ display:block; }
 
     .block {
       background: var(--card-alt);
       border-radius: var(--radius-lg);
       padding: 10px 10px 12px;
-      border: 1px solid rgba(30, 64, 175, 0.3);
-      box-shadow: 0 16px 30px rgba(15, 23, 42, 0.75);
+      border: 1px solid rgba(255, 62, 165, 0.14);
+      box-shadow: 0 16px 30px rgba(0, 0, 0, 0.55);
       margin-bottom: 10px;
     }
 
@@ -129,13 +140,13 @@
       padding: 3px 8px;
       border-radius: 999px;
       background: var(--accent-soft);
-      color: #bbf7d0;
+      color: #ffd1ea;
       font-size: 0.7rem;
       display: inline-flex;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
+      border: 1px solid rgba(255, 62, 165, 0.18);
     }
-
     .pill-ontrack span.dot {
       width: 6px;
       height: 6px;
@@ -155,8 +166,8 @@
     textarea {
       width: 100%;
       border-radius: 11px;
-      border: 1px solid rgba(30, 64, 175, 0.7);
-      background: radial-gradient(circle at top, #020617, #020617 55%, #020814);
+      border: 1px solid rgba(255, 62, 165, 0.28);
+      background: radial-gradient(circle at top, #0b0b12, #070812 55%, #05060a);
       color: var(--text-main);
       padding: 7px 10px;
       font-size: 0.85rem;
@@ -166,20 +177,15 @@
     }
 
     input::placeholder,
-    textarea::placeholder {
-      color: #6b7280;
-    }
+    textarea::placeholder { color: #6b7280; }
 
     input:focus,
     textarea:focus {
-      border-color: #60a5fa;
-      box-shadow: 0 0 0 1px rgba(37, 99, 235, 0.7);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(255, 62, 165, 0.55);
     }
 
-    textarea {
-      resize: none;
-      min-height: 46px;
-    }
+    textarea { resize: none; min-height: 46px; }
 
     .workout-layout {
       display: grid;
@@ -188,9 +194,7 @@
       margin-bottom: 6px;
     }
 
-    .note-row {
-      margin-top: 4px;
-    }
+    .note-row { margin-top: 4px; }
 
     .block-title-row {
       display: flex;
@@ -203,17 +207,15 @@
       font-size: 0.7rem;
       padding: 3px 7px;
       border-radius: 999px;
-      background: rgba(15, 23, 42, 0.9);
+      background: rgba(255,255,255,0.06);
       color: var(--text-soft);
       display: inline-flex;
       align-items: center;
       gap: 4px;
+      border: 1px solid rgba(255,255,255,0.08);
     }
 
-    .counter-pill span {
-      color: #e5e7eb;
-      font-weight: 500;
-    }
+    .counter-pill span { color: #e5e7eb; font-weight: 600; }
 
     .exercise-header {
       display: grid;
@@ -235,14 +237,12 @@
       margin-bottom: 6px;
     }
 
-    .exercise-row input[type="number"] {
-      text-align: center;
-    }
+    .exercise-row input[type="number"] { text-align: center; }
 
     .rpe-badge {
       border-radius: 999px;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.10);
       padding: 5px 7px;
       font-size: 0.7rem;
       display: flex;
@@ -256,7 +256,7 @@
       flex: 1;
       appearance: none;
       height: 3px;
-      background: #1f2937;
+      background: rgba(255,255,255,0.14);
       border-radius: 999px;
       outline: none;
     }
@@ -267,15 +267,15 @@
       height: 12px;
       border-radius: 999px;
       background: var(--accent);
-      border: 1px solid #22c55e;
-      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.25);
+      border: 1px solid rgba(255, 102, 196, 0.9);
+      box-shadow: 0 0 0 4px rgba(255, 62, 165, 0.25);
     }
 
     .rpe-badge span {
       min-width: 1.2rem;
       text-align: right;
       font-variant-numeric: tabular-nums;
-      color: #a5b4fc;
+      color: #ffd1ea;
     }
 
     .btn {
@@ -283,64 +283,46 @@
       border-radius: var(--radius-sm);
       padding: 6px 10px;
       font-size: 0.78rem;
-      font-weight: 500;
+      font-weight: 600;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 4px;
-      transition: background 0.15s ease, transform 0.08s ease,
-        box-shadow 0.12s ease;
+      gap: 6px;
+      transition: background 0.15s ease, transform 0.08s ease, box-shadow 0.12s ease;
       white-space: nowrap;
+      text-decoration: none;
     }
 
     .btn-ghost {
-      background: rgba(15, 23, 42, 0.9);
+      background: rgba(255,255,255,0.06);
       color: #e5e7eb;
-      border: 1px solid rgba(55, 65, 81, 0.9);
+      border: 1px solid rgba(255,255,255,0.10);
     }
-
-    .btn-ghost:hover {
-      background: rgba(31, 41, 55, 0.95);
-    }
+    .btn-ghost:hover { background: rgba(255,255,255,0.10); }
 
     .btn-ghost-danger {
-      border-color: rgba(248, 113, 113, 0.6);
+      border-color: rgba(251, 113, 133, 0.55);
       color: #fecaca;
     }
-
-    .btn-ghost-danger:hover {
-      background: rgba(127, 29, 29, 0.75);
-    }
+    .btn-ghost-danger:hover { background: rgba(127, 29, 29, 0.55); }
 
     .btn-accent {
-      background: linear-gradient(135deg, #4ade80, #22c55e);
-      color: #052e16;
-      box-shadow: 0 0 25px rgba(34, 197, 94, 0.35);
+      background: linear-gradient(135deg, #ff3ea5, #ff66c4);
+      color: #14000b;
+      box-shadow: 0 0 25px rgba(255, 62, 165, 0.30);
     }
+    .btn-accent:hover { filter: brightness(1.05); transform: translateY(-0.5px); }
+    .btn-accent:active { transform: translateY(0.5px); box-shadow: 0 0 10px rgba(255, 62, 165, 0.28); }
 
-    .btn-accent:hover {
-      filter: brightness(1.05);
-      transform: translateY(-0.5px);
-    }
-
-    .btn-accent:active {
-      transform: translateY(0.5px);
-      box-shadow: 0 0 10px rgba(34, 197, 94, 0.35);
-    }
-
-    .add-btn-row {
-      display: flex;
-      justify-content: flex-end;
-      margin-top: 2px;
-    }
+    .add-btn-row { display: flex; justify-content: flex-end; margin-top: 2px; }
 
     .history-block {
       margin-top: 8px;
-      background: rgba(15, 23, 42, 0.9);
+      background: rgba(255,255,255,0.04);
       border-radius: 16px;
       padding: 8px 10px 10px;
-      border: 1px dashed rgba(75, 85, 99, 0.6);
+      border: 1px dashed rgba(255, 255, 255, 0.14);
     }
 
     .history-header {
@@ -365,7 +347,7 @@
 
     .history-item {
       padding: 4px 0;
-      border-bottom: 1px solid rgba(31, 41, 55, 0.8);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
       font-size: 0.8rem;
       display: flex;
       justify-content: space-between;
@@ -373,13 +355,8 @@
       color: #9ca3af;
     }
 
-    .history-item:last-child {
-      border-bottom: none;
-    }
-
-    .history-item span.label {
-      color: #e5e7eb;
-    }
+    .history-item:last-child { border-bottom: none; }
+    .history-item span.label { color: #e5e7eb; }
 
     .complete-row {
       display: flex;
@@ -387,14 +364,12 @@
       align-items: center;
       padding-top: 6px;
       margin-top: 6px;
-      border-top: 1px solid rgba(30, 64, 175, 0.5);
+      border-top: 1px solid rgba(255, 62, 165, 0.18);
       font-size: 0.8rem;
       color: var(--text-soft);
     }
 
-    .complete-row span.emoji {
-      margin-right: 4px;
-    }
+    .complete-row span.emoji { margin-right: 4px; }
 
     .complete-toggle {
       display: inline-flex;
@@ -404,21 +379,12 @@
       font-size: 0.78rem;
     }
 
-    .complete-toggle input {
-      accent-color: var(--accent);
-    }
+    .complete-toggle input { accent-color: var(--accent); }
 
-    .small-kpi {
-      font-size: 0.76rem;
-      color: #9ca3af;
-    }
-
-    .small-kpi strong {
-      color: #e5e7eb;
-    }
+    .small-kpi { font-size: 0.76rem; color: #9ca3af; }
+    .small-kpi strong { color: #e5e7eb; }
 
     /* WEIGHT BLOCK */
-
     .weight-layout {
       display: flex;
       gap: 8px;
@@ -438,34 +404,17 @@
       text-align: center;
     }
 
-    .weight-unit {
-      font-size: 0.8rem;
-      color: var(--text-soft);
-    }
+    .weight-unit { font-size: 0.8rem; color: var(--text-soft); }
 
-    .weight-summary {
-      font-size: 0.78rem;
-      color: var(--text-soft);
-      margin-bottom: 6px;
-    }
-
-    .weight-summary span.value {
-      color: #e5e7eb;
-      font-weight: 500;
-    }
-
-    .weight-summary span.up {
-      color: #fca5a5;
-    }
-
-    .weight-summary span.down {
-      color: #6ee7b7;
-    }
+    .weight-summary { font-size: 0.78rem; color: var(--text-soft); margin-bottom: 6px; }
+    .weight-summary span.value { color: #e5e7eb; font-weight: 650; }
+    .weight-summary span.up { color: #fca5a5; }
+    .weight-summary span.down { color: var(--accent-2); }
 
     .weight-chart-wrapper {
       border-radius: 12px;
-      background: radial-gradient(circle at top, #020617, #020617 60%, #020814);
-      border: 1px solid rgba(30, 64, 175, 0.6);
+      background: radial-gradient(circle at top, #0b0b12, #070812 60%, #05060a);
+      border: 1px solid rgba(255, 62, 165, 0.18);
       padding: 6px 8px 8px;
     }
 
@@ -478,35 +427,76 @@
       color: #6b7280;
     }
 
-    .weight-chart-label-row span.highlight {
-      color: #e5e7eb;
-      font-weight: 500;
+    .weight-chart-label-row span.highlight { color: #e5e7eb; font-weight: 650; }
+
+    canvas#weight-chart { width: 100%; height: 90px; display: block; }
+
+    /* Videos */
+    .chip-row{ display:flex; gap:8px; flex-wrap:wrap; margin: 8px 0 10px; }
+    .chip{
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.10);
+      background: rgba(0,0,0,0.25);
+      color: var(--text-soft);
+      cursor:pointer;
+      font-size: 0.8rem;
+      font-weight: 650;
+    }
+    .chip.active{
+      border-color: rgba(255, 62, 165, 0.35);
+      background: rgba(255, 62, 165, 0.14);
+      color: #ffe4f3;
     }
 
-    canvas#weight-chart {
-      width: 100%;
-      height: 90px;
-      display: block;
+    .video-list{ display:flex; flex-direction:column; gap:10px; }
+    .video-card{
+      border-radius: 16px;
+      padding: 10px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .video-title{
+      font-size: 0.9rem;
+      font-weight: 750;
+      color: #f9fafb;
+      margin-bottom: 8px;
+    }
+
+    /* TikTok embed container: keep it responsive even though TikTok controls its own height */
+    .video-embed-tt {
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 62, 165, 0.18);
+      padding: 8px;
+      background: rgba(0,0,0,0.15);
+    }
+    .tiktok-embed {
+      margin: 0 !important;
+      width: 100% !important;
+      max-width: 100% !important;
+      min-width: 0 !important;
+    }
+
+    .offline-note{
+      font-size: 0.78rem;
+      color: var(--text-soft);
+      padding: 10px 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      margin-bottom: 10px;
     }
 
     @media (max-width: 480px) {
-      body {
-        padding-inline: 10px;
-      }
-
-      .main-card {
-        border-radius: 22px;
-      }
-
-      .workout-layout {
-        grid-template-columns: 1fr;
-      }
+      body { padding-inline: 10px; }
+      .main-card { border-radius: 22px; }
+      .workout-layout { grid-template-columns: 1fr; }
 
       .exercise-header {
         grid-template-columns: 1.5fr 1fr 1fr;
         grid-template-areas: "name sets reps";
       }
-
       .exercise-header div:nth-child(1) { grid-area: name; }
       .exercise-header div:nth-child(2) { grid-area: sets; }
       .exercise-header div:nth-child(3) { grid-area: reps; }
@@ -520,7 +510,6 @@
           "name sets reps"
           "rpe weight actions";
       }
-
       .exercise-row input[name="exercise-name"] { grid-area: name; }
       .exercise-row input[name="sets"] { grid-area: sets; }
       .exercise-row input[name="reps"] { grid-area: reps; }
@@ -533,6 +522,7 @@
     }
   </style>
 </head>
+
 <body>
   <div class="app-shell">
     <div class="main-card">
@@ -547,128 +537,132 @@
         </div>
       </header>
 
-      <!-- WORKOUT INFO -->
-      <section class="block">
-        <div class="block-header-row">
-          <div class="block-title">Workout</div>
-          <div class="pill-ontrack">
-            <span class="dot"></span>
-            On track
+      <div class="tabbar">
+        <button class="tab active" data-tab="log">Log</button>
+        <button class="tab" data-tab="videos">Videos</button>
+      </div>
+
+      <!-- LOG TAB -->
+      <div id="tab-log" class="tabpage active">
+        <!-- WORKOUT INFO -->
+        <section class="block">
+          <div class="block-header-row">
+            <div class="block-title">Workout</div>
+            <div class="pill-ontrack">
+              <span class="dot"></span>
+              On track
+            </div>
           </div>
-        </div>
 
-        <div class="workout-layout">
-          <div>
-            <label for="workout-name">Name today’s session</label>
-            <input
-              id="workout-name"
-              type="text"
-              placeholder="Push, pull, legs, arms, etc."
-            />
+          <div class="workout-layout">
+            <div>
+              <label for="workout-name">Name today’s session</label>
+              <input id="workout-name" type="text" placeholder="Push, pull, legs, arms, etc." />
+            </div>
+            <div>
+              <label for="workout-focus">Focus</label>
+              <input id="workout-focus" type="text" placeholder="Chest + tris, back, cardio..." />
+            </div>
           </div>
-          <div>
-            <label for="workout-focus">Focus</label>
-            <input
-              id="workout-focus"
-              type="text"
-              placeholder="Chest + tris, back, cardio..."
-            />
+
+          <div class="note-row">
+            <label for="workout-notes">Notes</label>
+            <textarea id="workout-notes" placeholder="Energy, sleep, goals, how you feel…"></textarea>
           </div>
-        </div>
+        </section>
 
-        <div class="note-row">
-          <label for="workout-notes">Notes</label>
-          <textarea
-            id="workout-notes"
-            placeholder="Energy, sleep, goals, how you feel…"
-          ></textarea>
-        </div>
-      </section>
-
-      <!-- BODYWEIGHT -->
-      <section class="block">
-        <div class="block-header-row">
-          <div class="block-title">Bodyweight</div>
-          <div class="counter-pill">
-            Trend: <span id="weight-trend-label">—</span>
+        <!-- BODYWEIGHT -->
+        <section class="block">
+          <div class="block-header-row">
+            <div class="block-title">Bodyweight</div>
+            <div class="counter-pill">
+              Trend: <span id="weight-trend-label">—</span>
+            </div>
           </div>
-        </div>
 
-        <div class="weight-layout">
-          <div class="weight-layout-main">
-            <input
-              id="weight-input"
-              type="number"
-              step="0.1"
-              min="0"
-              placeholder="165.0"
-            />
-            <span class="weight-unit">lb</span>
+          <div class="weight-layout">
+            <div class="weight-layout-main">
+              <input id="weight-input" type="number" step="0.1" min="0" placeholder="165.0" />
+              <span class="weight-unit">lb</span>
+            </div>
+            <button class="btn btn-accent" id="save-weight-btn">Save</button>
           </div>
-          <button class="btn btn-accent" id="save-weight-btn">
-            Save
-          </button>
-        </div>
 
-        <div class="weight-summary" id="weight-summary">
-          No weight logged yet for today.
-        </div>
-
-        <div class="weight-chart-wrapper">
-          <div class="weight-chart-label-row">
-            <span>Last <span class="highlight">14</span> entries</span>
-            <span id="weight-range-label">—</span>
+          <div class="weight-summary" id="weight-summary">
+            No weight logged yet for today.
           </div>
-          <canvas id="weight-chart"></canvas>
-        </div>
-      </section>
 
-      <!-- EXERCISES -->
-      <section class="block">
-        <div class="block-title-row">
-          <div class="block-title">Session</div>
-          <div class="counter-pill">
-            Sets logged: <span id="set-count">0</span>
+          <div class="weight-chart-wrapper">
+            <div class="weight-chart-label-row">
+              <span>Last <span class="highlight">14</span> entries</span>
+              <span id="weight-range-label">—</span>
+            </div>
+            <canvas id="weight-chart"></canvas>
           </div>
-        </div>
+        </section>
 
-        <div class="exercise-header">
-          <div>Exercise</div>
-          <div>Sets</div>
-          <div>Reps</div>
-          <div>Weight</div>
-          <div>RPE</div>
-        </div>
-
-        <div id="exercise-container"></div>
-
-        <div class="add-btn-row">
-          <button class="btn btn-ghost" id="add-exercise-btn">
-            + Add exercise
-          </button>
-        </div>
-      </section>
-
-      <!-- HISTORY + COMPLETE -->
-      <section class="history-block">
-        <div class="history-header">
-          <div class="history-title">Recent sessions</div>
-        </div>
-        <div class="history-entries" id="history-list"></div>
-
-        <div class="complete-row">
-          <div>
-            <span class="emoji">🏁</span>
-            <label class="complete-toggle">
-              <input type="checkbox" id="complete-toggle" />
-              Mark today complete
-            </label>
+        <!-- EXERCISES -->
+        <section class="block">
+          <div class="block-title-row">
+            <div class="block-title">Session</div>
+            <div class="counter-pill">
+              Sets logged: <span id="set-count">0</span>
+            </div>
           </div>
-          <div class="small-kpi">
-            Total sets today: <strong id="total-sets-footer">0</strong>
+
+          <div class="exercise-header">
+            <div>Exercise</div>
+            <div>Sets</div>
+            <div>Reps</div>
+            <div>Weight</div>
+            <div>RPE</div>
           </div>
+
+          <div id="exercise-container"></div>
+
+          <div class="add-btn-row">
+            <button class="btn btn-ghost" id="add-exercise-btn">+ Add exercise</button>
+          </div>
+        </section>
+
+        <!-- HISTORY + COMPLETE -->
+        <section class="history-block">
+          <div class="history-header">
+            <div class="history-title">Recent sessions</div>
+          </div>
+          <div class="history-entries" id="history-list"></div>
+
+          <div class="complete-row">
+            <div>
+              <span class="emoji">🏁</span>
+              <label class="complete-toggle">
+                <input type="checkbox" id="complete-toggle" />
+                Mark today complete
+              </label>
+            </div>
+            <div class="small-kpi">
+              Total sets today: <strong id="total-sets-footer">0</strong>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- VIDEOS TAB -->
+      <div id="tab-videos" class="tabpage">
+        <div class="offline-note" id="offline-note" style="display:none;">
+          TikTok embeds need internet. You can still tap <strong>Open in TikTok</strong>.
         </div>
-      </section>
+
+        <section class="block">
+          <div class="block-header-row">
+            <div class="block-title">Videos</div>
+            <div class="counter-pill">Favorites</div>
+          </div>
+
+          <div class="chip-row" id="video-chips"></div>
+          <div id="video-list" class="video-list"></div>
+        </section>
+      </div>
     </div>
   </div>
 
@@ -748,9 +742,11 @@
       let streak = 0;
       const today = todayKey();
       let expected = today;
+
       for (const d of dates) {
         const day = state.days[d];
         if (!day.complete) continue;
+
         if (d === expected) {
           streak++;
           const dt = new Date(expected);
@@ -764,11 +760,13 @@
     function renderHistory(state) {
       const dates = Object.keys(state.days).sort().reverse().slice(0, 7);
       historyListEl.innerHTML = "";
+
       if (!dates.length) {
         historyListEl.innerHTML =
           '<div class="history-item"><span>No history yet.</span></div>';
         return;
       }
+
       dates.forEach((key) => {
         const d = state.days[key];
         const dateLabel = formatDate(new Date(key));
@@ -776,12 +774,11 @@
           (sum, ex) => sum + (Number(ex.sets) || 0),
           0
         );
+
         const item = document.createElement("div");
         item.className = "history-item";
         item.innerHTML = `
-          <span><span class="label">${dateLabel}</span> – ${
-          d.workoutName || "Untitled"
-        }</span>
+          <span><span class="label">${dateLabel}</span> – ${d.workoutName || "Untitled"}</span>
           <span>${sets} sets</span>
         `;
         historyListEl.appendChild(item);
@@ -802,26 +799,16 @@
       row.className = "exercise-row";
 
       row.innerHTML = `
-        <input name="exercise-name" type="text" placeholder="Bicep curls" value="${
-          exercise.name || ""
-        }" />
-        <input name="sets" type="number" min="0" placeholder="3" value="${
-          exercise.sets ?? ""
-        }" />
-        <input name="reps" type="number" min="0" placeholder="10" value="${
-          exercise.reps ?? ""
-        }" />
-        <input name="weight" type="number" min="0" step="0.5" placeholder="lb" value="${
-          exercise.weight ?? ""
-        }" />
+        <input name="exercise-name" type="text" placeholder="Bicep curls" value="${exercise.name || ""}" />
+        <input name="sets" type="number" min="0" placeholder="3" value="${exercise.sets ?? ""}" />
+        <input name="reps" type="number" min="0" placeholder="10" value="${exercise.reps ?? ""}" />
+        <input name="weight" type="number" min="0" step="0.5" placeholder="lb" value="${exercise.weight ?? ""}" />
         <div class="rpe-badge">
           <span>RPE</span>
-          <input name="rpe" type="range" min="5" max="10" step="0.5" value="${
-            exercise.rpe ?? 7
-          }" />
+          <input name="rpe" type="range" min="5" max="10" step="0.5" value="${exercise.rpe ?? 7}" />
           <span class="rpe-val">${exercise.rpe ?? 7}</span>
         </div>
-        <button class="btn btn-ghost btn-ghost-danger">✕</button>
+        <button class="btn btn-ghost btn-ghost-danger" type="button">✕</button>
       `;
 
       const nameInput = row.querySelector('input[name="exercise-name"]');
@@ -852,12 +839,10 @@
       });
 
       deleteBtn.addEventListener("click", () => onDelete(index));
-
       return row;
     }
 
     // WEIGHT LOGIC
-
     function saveTodayWeight() {
       const raw = weightInputEl.value;
       const val = Number(raw);
@@ -874,6 +859,7 @@
       } else {
         state.weightLog.push({ date: key, weight: val });
       }
+
       state.weightLog.sort((a, b) => (a.date < b.date ? -1 : 1));
       saveState(state);
       renderWeight(state);
@@ -881,17 +867,12 @@
 
     function renderWeight(state) {
       if (!state.weightLog) state.weightLog = [];
-      const log = [...state.weightLog].sort((a, b) =>
-        a.date < b.date ? -1 : 1
-      );
+      const log = [...state.weightLog].sort((a, b) => (a.date < b.date ? -1 : 1));
       const key = todayKey();
       const todayEntry = log.find((e) => e.date === key);
 
-      if (todayEntry) {
-        weightInputEl.value = todayEntry.weight.toFixed(1);
-      } else {
-        weightInputEl.value = "";
-      }
+      if (todayEntry) weightInputEl.value = todayEntry.weight.toFixed(1);
+      else weightInputEl.value = "";
 
       if (!log.length) {
         weightSummaryEl.textContent = "No weight logged yet for today.";
@@ -901,7 +882,6 @@
         return;
       }
 
-      // last and previous
       const last = log[log.length - 1];
       const prev = log.length > 1 ? log[log.length - 2] : null;
 
@@ -912,38 +892,27 @@
         if (Math.abs(diff) >= 0.05) {
           const cls = diff > 0 ? "up" : "down";
           const arrow = diff > 0 ? "↑" : "↓";
-          summaryText += ` • <span class="${cls}">${arrow} ${Math.abs(
-            diff
-          ).toFixed(1)} lb vs prev</span>`;
+          summaryText += ` • <span class="${cls}">${arrow} ${Math.abs(diff).toFixed(1)} lb vs prev</span>`;
         }
       }
       weightSummaryEl.innerHTML = summaryText;
 
-      // trend label (7-day-ish)
       if (log.length > 1) {
         const first = log[0];
         const totalDiff = last.weight - first.weight;
-        if (Math.abs(totalDiff) < 0.05) {
-          weightTrendLabelEl.textContent = "stable";
-        } else if (totalDiff < 0) {
-          weightTrendLabelEl.textContent = "down";
-        } else {
-          weightTrendLabelEl.textContent = "up";
-        }
+        if (Math.abs(totalDiff) < 0.05) weightTrendLabelEl.textContent = "stable";
+        else if (totalDiff < 0) weightTrendLabelEl.textContent = "down";
+        else weightTrendLabelEl.textContent = "up";
       } else {
         weightTrendLabelEl.textContent = "—";
       }
 
-      // range label
       const weights = log.map((e) => e.weight);
       const minW = Math.min(...weights);
       const maxW = Math.max(...weights);
       weightRangeLabelEl.textContent =
-        log.length > 1
-          ? `${minW.toFixed(1)} – ${maxW.toFixed(1)} lb`
-          : `${last.weight.toFixed(1)} lb`;
+        log.length > 1 ? `${minW.toFixed(1)} – ${maxW.toFixed(1)} lb` : `${last.weight.toFixed(1)} lb`;
 
-      // chart: last 14 entries
       const last14 = log.slice(-14);
       drawWeightChart(last14);
     }
@@ -959,12 +928,11 @@
 
       ctx.clearRect(0, 0, rect.width, rect.height);
 
-      // background grid-ish
-      ctx.fillStyle = "#020617";
+      ctx.fillStyle = "#0b0b12";
       ctx.fillRect(0, 0, rect.width, rect.height);
 
       if (!points || points.length === 0) {
-        ctx.fillStyle = "#6b7280";
+        ctx.fillStyle = "#a1a1aa";
         ctx.font = "11px system-ui";
         ctx.fillText("Log a few days to see your trend.", 10, rect.height / 2);
         return;
@@ -973,10 +941,7 @@
       const weights = points.map((p) => p.weight);
       let minW = Math.min(...weights);
       let maxW = Math.max(...weights);
-      if (minW === maxW) {
-        minW -= 0.5;
-        maxW += 0.5;
-      }
+      if (minW === maxW) { minW -= 0.5; maxW += 0.5; }
 
       const paddingX = 10;
       const paddingTop = 8;
@@ -984,7 +949,7 @@
       const width = rect.width - paddingX * 2;
       const height = rect.height - paddingTop - paddingBottom;
 
-      ctx.strokeStyle = "rgba(55,65,81,0.8)";
+      ctx.strokeStyle = "rgba(255,255,255,0.14)";
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.moveTo(paddingX, rect.height - paddingBottom);
@@ -1002,27 +967,22 @@
       ctx.beginPath();
       points.forEach((p, idx) => {
         const x = paddingX + stepX * idx;
-        const norm =
-          (p.weight - minW) / (maxW - minW || 1); // 0–1
+        const norm = (p.weight - minW) / (maxW - minW || 1);
         const y = paddingTop + (1 - norm) * height;
-
         if (idx === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
       });
-      ctx.strokeStyle = "#4ade80";
+      ctx.strokeStyle = "#ff3ea5";
       ctx.lineWidth = 1.7;
       ctx.stroke();
 
-      // points
       points.forEach((p, idx) => {
         const x = paddingX + stepX * idx;
-        const norm =
-          (p.weight - minW) / (maxW - minW || 1);
+        const norm = (p.weight - minW) / (maxW - minW || 1);
         const y = paddingTop + (1 - norm) * height;
-
         ctx.beginPath();
         ctx.arc(x, y, 2.5, 0, Math.PI * 2);
-        ctx.fillStyle = "#bbf7d0";
+        ctx.fillStyle = "#ffd1ea";
         ctx.fill();
       });
     }
@@ -1032,8 +992,7 @@
 
       todayDateEl.textContent = formatDate(new Date());
       const streak = calculateStreak(state);
-      streakTextEl.textContent =
-        streak > 0 ? `${streak}-day streak` : "Fresh start";
+      streakTextEl.textContent = streak > 0 ? `${streak}-day streak` : "Fresh start";
 
       workoutNameEl.value = day.workoutName || "";
       workoutFocusEl.value = day.focus || "";
@@ -1087,13 +1046,7 @@
 
     addExerciseBtn.addEventListener("click", () => {
       const { state, day } = getTodayState();
-      day.exercises.push({
-        name: "",
-        sets: "",
-        reps: "",
-        weight: "",
-        rpe: 7,
-      });
+      day.exercises.push({ name: "", sets: "", reps: "", weight: "", rpe: 7 });
       saveState(state);
       render();
     });
@@ -1105,18 +1058,204 @@
       render();
     });
 
-    saveWeightBtn.addEventListener("click", () => {
-      saveTodayWeight();
-    });
+    saveWeightBtn.addEventListener("click", () => saveTodayWeight());
 
     window.addEventListener("resize", () => {
       const state = loadState();
       renderWeight(state);
     });
 
-    // initial
+    // initial render
     render();
-       
+
+    // ---- TAB SWITCHING ----
+    const tabs = document.querySelectorAll(".tab");
+    const tabLog = document.getElementById("tab-log");
+    const tabVideos = document.getElementById("tab-videos");
+    const offlineNote = document.getElementById("offline-note");
+
+    function setOfflineNote() {
+      offlineNote.style.display = navigator.onLine ? "none" : "block";
+    }
+    window.addEventListener("online", setOfflineNote);
+    window.addEventListener("offline", setOfflineNote);
+    setOfflineNote();
+
+    tabs.forEach(btn => {
+      btn.addEventListener("click", async () => {
+        tabs.forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        const which = btn.dataset.tab;
+        tabLog.classList.toggle("active", which === "log");
+        tabVideos.classList.toggle("active", which === "videos");
+
+        if (which === "log") {
+          renderWeight(loadState()); // canvas sizing when un-hidden
+        } else {
+          setOfflineNote();
+          await renderVideos(); // ensure videos render when you open tab
+        }
+      });
+    });
+
+    // ---- VIDEO LIBRARY (TikTok) ----
+    const VIDEO_LIBRARY = {
+      shoulders: [
+        { title: "Shoulders 1", url: "https://www.tiktok.com/t/ZTh1NJ1CD/" },
+        { title: "Shoulders 2", url: "https://www.tiktok.com/t/ZTh1LnoYR/" },
+      ],
+      back: [
+        { title: "Back", url: "https://www.tiktok.com/t/ZTh1LsGVk/" },
+      ],
+      arms: [
+        { title: "Arms 1", url: "https://www.tiktok.com/t/ZTh1LxkRR/" },
+        { title: "Arms 2", url: "https://www.tiktok.com/t/ZTh1LcsGW/" },
+      ],
+      abs: [
+        // add later
+      ],
+      legs: [
+        { title: "Legs", url: "https://www.tiktok.com/t/ZTh1LxsLK/" },
+      ],
+    };
+
+    const VIDEO_TABS = [
+      { key: "shoulders", label: "Shoulders" },
+      { key: "back", label: "Back" },
+      { key: "arms", label: "Arms" },
+      { key: "abs", label: "Abs" },
+      { key: "legs", label: "Legs" },
+    ];
+
+    const chipsEl = document.getElementById("video-chips");
+    const videoListEl = document.getElementById("video-list");
+
+    let activeVideoKey = "shoulders";
+
+    function isTikTokUrl(url) {
+      return /tiktok\.com/i.test(url);
+    }
+
+    function ensureTikTokScript() {
+      return new Promise((resolve) => {
+        if (window.__tiktokEmbedLoaded) return resolve();
+
+        const existing = document.querySelector('script[data-tiktok-embed="1"]');
+        if (existing) {
+          existing.addEventListener("load", () => {
+            window.__tiktokEmbedLoaded = true;
+            resolve();
+          });
+          return;
+        }
+
+        const s = document.createElement("script");
+        s.src = "https://www.tiktok.com/embed.js";
+        s.async = true;
+        s.setAttribute("data-tiktok-embed", "1");
+        s.onload = () => {
+          window.__tiktokEmbedLoaded = true;
+          resolve();
+        };
+        document.body.appendChild(s);
+      });
+    }
+
+    async function refreshTikTokEmbeds() {
+      // TikTok sometimes exposes this; if not, ensure script is loaded
+      if (typeof window.tiktokEmbedLoad === "function") {
+        window.tiktokEmbedLoad();
+      } else {
+        await ensureTikTokScript();
+      }
+    }
+
+    function tiktokEmbedMarkup(url) {
+      // embed.js transforms this blockquote into the actual embed
+      return `
+        <blockquote class="tiktok-embed" cite="${url}" style="max-width:100%; min-width:0;">
+          <section>
+            <a target="_blank" rel="noopener" href="${url}">Watch on TikTok</a>
+          </section>
+        </blockquote>
+      `;
+    }
+
+    function renderVideoChips() {
+      chipsEl.innerHTML = "";
+      VIDEO_TABS.forEach(t => {
+        const chip = document.createElement("button");
+        chip.className = "chip" + (t.key === activeVideoKey ? " active" : "");
+        chip.textContent = t.label;
+        chip.addEventListener("click", async () => {
+          activeVideoKey = t.key;
+          renderVideoChips();
+          await renderVideos();
+        });
+        chipsEl.appendChild(chip);
+      });
+    }
+
+    async function renderVideos() {
+      videoListEl.innerHTML = "";
+      const vids = VIDEO_LIBRARY[activeVideoKey] || [];
+
+      if (!vids.length) {
+        videoListEl.innerHTML = `<div class="history-item"><span>No videos yet.</span></div>`;
+        return;
+      }
+
+      // If TikTok exists, load script (won't work offline, but fallback button always shows)
+      const hasTikTok = vids.some(v => isTikTokUrl(v.url));
+      if (hasTikTok && navigator.onLine) {
+        await ensureTikTokScript();
+      }
+
+      vids.forEach(v => {
+        const card = document.createElement("div");
+        card.className = "video-card";
+
+        const openBtn = `
+          <div style="display:flex; justify-content:flex-end; margin-top:8px;">
+            <a class="btn btn-ghost" href="${v.url}" target="_blank" rel="noopener">Open in TikTok</a>
+          </div>
+        `;
+
+        if (isTikTokUrl(v.url)) {
+          card.innerHTML = `
+            <div class="video-title">${v.title}</div>
+            <div class="video-embed-tt">
+              ${tiktokEmbedMarkup(v.url)}
+            </div>
+            ${openBtn}
+          `;
+        } else {
+          // (kept for future YouTube support)
+          card.innerHTML = `
+            <div class="video-title">${v.title}</div>
+            <div class="video-embed">
+              <iframe
+                src="${v.url}"
+                title="${v.title}"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+              ></iframe>
+            </div>
+          `;
+        }
+
+        videoListEl.appendChild(card);
+      });
+
+      if (hasTikTok && navigator.onLine) {
+        setTimeout(refreshTikTokEmbeds, 60);
+      }
+    }
+
+    // init videos UI
+    renderVideoChips();
+
     // Register service worker for PWA
     if ("serviceWorker" in navigator) {
       window.addEventListener("load", () => {
