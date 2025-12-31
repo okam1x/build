@@ -1113,7 +1113,7 @@
         { title: "Arms 2", url: "https://www.tiktok.com/t/ZTh1LcsGW/" },
       ],
       abs: [
-        // add later
+        { title: "Abs", url: "https://www.tiktok.com/t/ZTh1FmhwF/" },
       ],
       legs: [
         { title: "Legs", url: "https://www.tiktok.com/t/ZTh1LxsLK/" },
@@ -1133,71 +1133,22 @@
 
     let activeVideoKey = "shoulders";
 
-    function isTikTokUrl(url) {
-      return /tiktok\.com/i.test(url);
-    }
-
-    function ensureTikTokScript() {
-      return new Promise((resolve) => {
-        if (window.__tiktokEmbedLoaded) return resolve();
-
-        const existing = document.querySelector('script[data-tiktok-embed="1"]');
-        if (existing) {
-          existing.addEventListener("load", () => {
-            window.__tiktokEmbedLoaded = true;
-            resolve();
-          });
-          return;
-        }
-
-        const s = document.createElement("script");
-        s.src = "https://www.tiktok.com/embed.js";
-        s.async = true;
-        s.setAttribute("data-tiktok-embed", "1");
-        s.onload = () => {
-          window.__tiktokEmbedLoaded = true;
-          resolve();
-        };
-        document.body.appendChild(s);
-      });
-    }
-
-    async function refreshTikTokEmbeds() {
-      // TikTok sometimes exposes this; if not, ensure script is loaded
-      if (typeof window.tiktokEmbedLoad === "function") {
-        window.tiktokEmbedLoad();
-      } else {
-        await ensureTikTokScript();
-      }
-    }
-
-    function tiktokEmbedMarkup(url) {
-      // embed.js transforms this blockquote into the actual embed
-      return `
-        <blockquote class="tiktok-embed" cite="${url}" style="max-width:100%; min-width:0;">
-          <section>
-            <a target="_blank" rel="noopener" href="${url}">Watch on TikTok</a>
-          </section>
-        </blockquote>
-      `;
-    }
-
     function renderVideoChips() {
       chipsEl.innerHTML = "";
       VIDEO_TABS.forEach(t => {
         const chip = document.createElement("button");
         chip.className = "chip" + (t.key === activeVideoKey ? " active" : "");
         chip.textContent = t.label;
-        chip.addEventListener("click", async () => {
-          activeVideoKey = t.key;
-          renderVideoChips();
-          await renderVideos();
-        });
+       chip.addEventListener("click", () => {
+        activeVideoKey = t.key;
+        renderVideoChips();
+        renderVideos();
+      });
         chipsEl.appendChild(chip);
       });
     }
 
-    async function renderVideos() {
+   async function renderVideos() {
       videoListEl.innerHTML = "";
       const vids = VIDEO_LIBRARY[activeVideoKey] || [];
 
@@ -1205,13 +1156,7 @@
         videoListEl.innerHTML = `<div class="history-item"><span>No videos yet.</span></div>`;
         return;
       }
-
-      // If TikTok exists, load script (won't work offline, but fallback button always shows)
-      const hasTikTok = vids.some(v => isTikTokUrl(v.url));
-      if (hasTikTok && navigator.onLine) {
-        await ensureTikTokScript();
-      }
-
+   
       vids.forEach(v => {
         const card = document.createElement("div");
         card.className = "video-card";
@@ -1247,11 +1192,6 @@
 
         videoListEl.appendChild(card);
       });
-
-      if (hasTikTok && navigator.onLine) {
-        setTimeout(refreshTikTokEmbeds, 60);
-      }
-    }
 
     // init videos UI
     renderVideoChips();
