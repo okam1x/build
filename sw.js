@@ -1,4 +1,4 @@
-const CACHE_NAME = "ved-lift-cache-v1";
+const CACHE_NAME = "ved-lift-cache-v2";
 
 const ASSETS = [
   "./",
